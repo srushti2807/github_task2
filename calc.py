@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import math
+import re
 
 class Calculator:
     def __init__(self, master):
@@ -83,8 +84,9 @@ class Calculator:
 
     def calculate_result(self):
         try:
-            expression = self.result_var.get()
-            result = eval(expression[:-2])  # Remove the last operator and space
+            expression = self.result_var.get().replace('^', '**')  # Replace ^ with ** for exponentiation
+            expression = re.sub(r'\s+', '', expression)  # Remove whitespace
+            result = eval(expression)  # Safely evaluate the expression
             self.result_var.set(result)
             self.history.append(str(result))
         except Exception as e:
@@ -106,7 +108,7 @@ class Calculator:
         current_text = self.result_var.get()
         if current_text:
             self.history.append(current_text + " ^ ")
-            self.result_var.set(current_text + " ** ")
+            self.result_var.set(current_text + " ^ ")
 
     def calculate_percentage(self):
         try:
